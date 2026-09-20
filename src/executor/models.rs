@@ -1,4 +1,4 @@
-use std::iter::Map;
+use std::{collections::HashMap, iter::Map};
 
 use serde::Deserialize;
 
@@ -12,10 +12,19 @@ pub struct Task {
 #[derive(Debug, Deserialize)]
 pub struct TaskMetadata {
     #[serde(flatten)]
-    pub values: Map<String, TaskMetadataValueTypes>
+    pub values: HashMap<String, TaskMetadataValueTypes>
 }
 
 #[derive(Debug, Deserialize)]
+#[serde(tag = "type", content = "data")]
 pub enum TaskMetadataValueTypes {
+    #[serde(rename = "email")]
+    Email(EmailData)
+}
 
+#[derive(Debug, Deserialize)]
+pub struct EmailData {
+    pub recipients: Vec<String>,
+    pub body: String,
+    pub subject: String
 }
