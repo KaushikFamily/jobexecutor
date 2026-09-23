@@ -20,7 +20,10 @@ async fn main() {
 
     let listener = TcpListener::bind("127.0.0.1:3001")
         .await
-        .unwrap(); 
+        .unwrap();
+
+    println!("SERVER IS RUNNING ON HTTP://127.0.0.1:3001");
+
 
     // PROCESSOR THREAD
     tokio::spawn(async move {
@@ -31,6 +34,5 @@ async fn main() {
 
     axum::serve(listener, app)
         .await
-        .unwrap()
-    ;
+        .unwrap();
 }

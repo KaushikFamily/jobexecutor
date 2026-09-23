@@ -4,7 +4,7 @@ use std::{env, error::Error};
 
 use lettre::{AsyncSmtpTransport, AsyncTransport, Message, Tokio1Executor, message::header::ContentType, transport::smtp::authentication::Credentials};
 
-use crate::executor::{EmailNotification, Task, models::{EmailData, TaskMetadata, TaskMetadataValueTypes}, task};
+use crate::executor::{EmailNotification, Task, models::{EmailData, TaskMetadata, TaskMetadataValueTypes}};
 
 // -------------- Implement Structs -------------- //
 
