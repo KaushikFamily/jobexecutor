@@ -17,7 +17,7 @@ async fn consume_event(
     Json(event): Json<Event>
 ) -> Result<(StatusCode, Json<Option<String>>), StatusCode>
 {
-    let task_name = event.task_name.clone();
+    let job_name = event.job_name.clone();
     
     state
         .event_sender
@@ -25,7 +25,7 @@ async fn consume_event(
         .await
         .unwrap();
 
-    Ok((StatusCode::CREATED, Json(Some(task_name))))
+    Ok((StatusCode::CREATED, Json(Some(job_name))))
 }
 
 pub fn create_routes(
