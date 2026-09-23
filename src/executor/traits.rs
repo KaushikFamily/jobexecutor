@@ -7,5 +7,6 @@ pub trait NotificationTask {
 }
 
 pub trait EmailNotificationTask {
-    fn send_email(&self) -> Result<String, Box<dyn Error>>;
+    async fn send_email(&self) -> Result<String, Box<dyn Error>>;
+    
 }
