@@ -10,6 +10,12 @@ pub struct Task {
 }
 
 #[derive(Debug, Deserialize)]
+pub struct FeedFishesV1 {
+    pub job_id: String,
+    pub task: Task
+}
+
+#[derive(Debug, Deserialize)]
 pub struct TaskMetadata {
     #[serde(flatten)]
     pub values: HashMap<String, TaskMetadataValueTypes>
