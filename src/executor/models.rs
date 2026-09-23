@@ -1,4 +1,5 @@
 use std::{collections::HashMap, iter::Map};
+use tokio::sync::mpsc;
 
 use serde::Deserialize;
 
@@ -13,6 +14,17 @@ pub struct Task {
 pub struct FeedFishesV1 {
     pub job_id: String,
     pub task: Task
+}
+
+#[derive(Debug)]
+pub struct Event {
+    pub event_type: String,
+    pub payload: String
+}
+
+#[derive(Debug)]
+pub struct AppState {
+    pub event_sender: mpsc::Sender<Event>, 
 }
 
 #[derive(Debug, Deserialize)]
