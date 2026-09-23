@@ -1,5 +1,6 @@
 use std::{println, sync::Arc};
 
+use axum::extract::State;
 use tokio::{net::TcpListener, sync::mpsc};
 
 use crate::{executor::{AppState, Event}, routes::create_routes};
@@ -15,7 +16,7 @@ async fn main() {
         event_sender: tx
     });
 
-    let app = create_routes(state);
+    let app = create_routes(State(state));
 
     let listener = TcpListener::bind("127.0.0.1:3001")
         .await
