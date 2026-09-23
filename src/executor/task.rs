@@ -4,7 +4,7 @@ use std::{env, error::Error};
 
 use lettre::{AsyncSmtpTransport, AsyncTransport, Message, Tokio1Executor, message::header::ContentType, transport::smtp::authentication::Credentials};
 
-use crate::executor::{Task, models::{EmailData, TaskMetadata, TaskMetadataValueTypes}, task, traits::EmailNotificationTask};
+use crate::executor::{EmailNotification, Task, models::{EmailData, TaskMetadata, TaskMetadataValueTypes}, task};
 
 // -------------- Implement Structs -------------- //
 
@@ -22,8 +22,9 @@ impl TaskMetadata {
 
 // -------------- Implement Traits -------------- //
 
-impl EmailNotificationTask for Task {
+impl EmailNotification for Task {
     async fn send_email(&self) -> Result<String, Box<dyn Error>> {
+        
         // Get email data
         let metadata = &self.metadata;
         let email_data = metadata.email_data().unwrap();
