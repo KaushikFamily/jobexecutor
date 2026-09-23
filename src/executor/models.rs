@@ -5,7 +5,7 @@ use serde::Deserialize;
 
 #[derive(Debug, Deserialize)]
 pub struct Task {
-    pub task_name: String,
+    pub job_name: String,
     pub task_id: String,
     pub metadata: TaskMetadata
 }
@@ -19,7 +19,7 @@ pub struct FeedFishesV1 {
 #[derive(Debug, Deserialize)]
 pub struct Event {
     pub event_type: String,
-    pub task_name: String
+    pub job_name: String
 }
 
 #[derive(Debug)]
