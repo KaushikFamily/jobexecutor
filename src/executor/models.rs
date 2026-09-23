@@ -16,10 +16,10 @@ pub struct FeedFishesV1 {
     pub task: Task
 }
 
-#[derive(Debug)]
+#[derive(Debug, Deserialize)]
 pub struct Event {
     pub event_type: String,
-    pub payload: String
+    pub task_name: String
 }
 
 #[derive(Debug)]
