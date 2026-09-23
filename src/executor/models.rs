@@ -26,5 +26,6 @@ pub enum TaskMetadataValueTypes {
 pub struct EmailData {
     pub recipients: Vec<String>,
     pub body: String,
-    pub subject: String
+    pub subject: String,
+    pub sender: String
 }
