@@ -41,11 +41,10 @@ pub async fn process_event(
 
             match feed_fishes_v1 {
                 Some(job) => {
-                    
+                    let _ = job.execute();
                 },
                 None => todo!(),
             }
-
             
             "FEED_FISHES"
         }
@@ -86,5 +85,4 @@ pub async fn get_metadata(
         Err(StatusCode::from_u16(response.status().as_u16())
         .unwrap_or(StatusCode::BAD_REQUEST))
     }
-
-}   
+} 

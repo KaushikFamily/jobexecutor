@@ -9,3 +9,4 @@ pub use models::Event;
 pub use models::AppState;
 
 pub use traits::EmailNotification;
+pub use processor::process_event;

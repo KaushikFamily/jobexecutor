@@ -4,17 +4,21 @@ use std::{env, error::Error};
 
 use lettre::{AsyncSmtpTransport, AsyncTransport, Message, Tokio1Executor, message::header::ContentType, transport::smtp::authentication::Credentials};
 
-use crate::executor::{EmailNotification, Task, models::{EmailData, TaskMetadata, TaskMetadataValueTypes}};
+use crate::executor::{EmailNotification, Task, models::{EmailData, TaskMetadata, TaskMetadataValueTypes::{self, Email}}};
 
 // -------------- Implement Structs -------------- //
 
 impl Task {
 }
 
-impl TaskMetadata {
-    pub fn email_data(&self) -> Option<&EmailData> {
+impl TaskMetadata
+{
+    pub fn email_data(
+        &self
+    ) -> Option<&EmailData>
+    {
         match self.values.get("emailData") {
-            Some(TaskMetadataValueTypes::Email(data)) => Some(data),
+            Some(Email(data)) => Some(data),
             _ => None
         }
     }
@@ -23,8 +27,10 @@ impl TaskMetadata {
 // -------------- Implement Traits -------------- //
 
 impl EmailNotification for Task {
-    async fn send_email(&self) -> Result<String, Box<dyn Error>> {
-        
+    async fn send_email(
+        &self
+    ) -> Result<String, Box<dyn Error>> 
+    {    
         // Get email data
         let metadata = &self.metadata;
         let email_data = metadata.email_data().unwrap();
@@ -34,11 +40,13 @@ impl EmailNotification for Task {
 
         let user_email = email_data.sender.clone();
         let user_password = env::var("SMTP_PASSWORD")?;
+
+        let header = email_data.subject.clone();
         let recipients: Vec<String> = email_data.recipients.clone();
 
         let mut builder = Message::builder()
             .from(user_email.parse()?)
-            .subject("Feed Fishes 9:45 PM")
+            .subject(header)
             .header(ContentType::TEXT_PLAIN)
         ;
 
