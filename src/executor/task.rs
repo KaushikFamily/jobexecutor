@@ -17,7 +17,7 @@ impl TaskMetadata
         &self
     ) -> Option<&EmailData>
     {
-        match self.values.get("emailData") {
+        match self.values.get("emailType") {
             Some(Email(data)) => Some(data),
             _ => None
         }
@@ -41,7 +41,7 @@ impl EmailNotification for Task {
         let user_email = email_data.sender.clone();
         let user_password = env::var("SMTP_PASSWORD")?;
 
-        let header = email_data.subject.clone();
+        let header = email_data.header.clone();
         let recipients: Vec<String> = email_data.recipients.clone();
 
         let mut builder = Message::builder()

@@ -34,18 +34,25 @@ pub struct TaskMetadata {
 }
 
 #[derive(Debug, Deserialize)]
-#[serde(tag = "type", content = "data")]
+#[serde(tag = "type")]
 pub enum TaskMetadataValueTypes {
-    #[serde(rename = "email")]
-    Email(EmailData)
+    #[serde(rename = "emailType")]
+    Email(EmailData),
+
+    #[serde(rename = "sampleType")]
+    Sample(SampleData)
 }
 
 #[derive(Debug, Deserialize)]
 pub struct EmailData {
     pub recipients: Vec<String>,
-    pub body: String,
-    pub subject: String,
+    pub message: String,
+    pub header: String,
     pub sender: String
+}
+
+#[derive(Debug, Deserialize)]
+pub struct SampleData {
 }
 
 #[derive(Debug, Deserialize, Serialize)]

@@ -1,13 +1,14 @@
-use std::fs::Metadata;
+use std::{collections::HashMap, fs::Metadata, println};
 
 use reqwest::{Client, StatusCode};
 
-use crate::executor::{Event, Task, models::{FeedFishesV1, TaskMetadata}};
+use crate::executor::{Event, Task, models::{FeedFishesV1, TaskMetadata, TaskMetadataValueTypes}};
 
 pub async fn process_event(
     event: Event
 ) -> Result<String, StatusCode>
-{
+{ 
+    println!("hello this is the job being executed: {}", event.job_name.clone());
     let res = match event.job_name.as_str() {
         "feed_fishes_v1" => {
             let metadata_resp = get_metadata(event.job_id.clone()).await;
@@ -41,9 +42,13 @@ pub async fn process_event(
 
             match feed_fishes_v1 {
                 Some(job) => {
-                    let _ = job.execute();
+                    let resp = job.execute().await;
+                    match resp {
+                        Ok(val) => println!("email execute: {}", val),
+                        Err(err) => println!("email execute err: {}", err),
+                    }
                 },
-                None => todo!(),
+                None => println!("NO FeedFishesV1 STRUCT CREATED"),
             }
             
             "FEED_FISHES"
@@ -60,26 +65,44 @@ pub async fn get_metadata(
 {
     let client = Client::new();
     
-    let url = format!("http://localhost:8000/jobs/metadata/{}", job_id);
+    let url = format!("http://localhost:8080/jobs/metadata/{}", job_id);
 
     let response = client
         .get(url)
         .send()
         .await
-        .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?;
+        .map_err(|err|  {
+            // println!("this is the err: {}", err.is_connect());
+            StatusCode::INTERNAL_SERVER_ERROR
+        })?;
 
     if (response.status().is_success())
     {
-        let metadata_response: TaskMetadata = response.json()
+        let metadata_response: Vec<TaskMetadataValueTypes> = response.json()
             .await
             .map_err(|e| {
                 println!("DESERIALIZATION ERROR: {:?}", e);
                 StatusCode::INTERNAL_SERVER_ERROR
 
             })?;
-
-        Ok((StatusCode::OK, Some(metadata_response)))
         
+        let values: HashMap<String, TaskMetadataValueTypes> =
+            metadata_response
+                .into_iter()
+                .map(|metadata| {
+                    let key = match &metadata {
+                        TaskMetadataValueTypes::Email(_) => "emailType",
+                        TaskMetadataValueTypes::Sample(_) => "sampleType",
+                    };
+
+                    (key.to_string(), metadata)
+                })
+                .collect();
+
+        Ok((
+            StatusCode::OK,
+            Some(TaskMetadata { values })
+        ))        
     } else 
     {
         Err(StatusCode::from_u16(response.status().as_u16())
