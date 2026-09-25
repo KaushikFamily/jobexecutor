@@ -29,7 +29,7 @@ async fn main() {
     tokio::spawn(async move {
         while let Some(event) = rx.recv().await{
             println!("HELLO I'M RECIEVING THE EVENT");
-            let _ = process_event(event);
+            let _ = process_event(event).await;
         }
     });
 
