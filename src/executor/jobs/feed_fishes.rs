@@ -5,11 +5,10 @@
 use crate::executor::{EmailNotification, models::FeedFishesV1, traits::EmailNotificationTaskType};
 
 impl FeedFishesV1 {
-    
+
 }
 
-
-// -------------- Implement Structs -------------- //
+// -------------- Implement Traits  -------------- //
 impl EmailNotificationTaskType for FeedFishesV1 {
     async fn notify(&self) -> Result<String, Box<dyn std::error::Error>> {
         match self.task.send_email().await {
@@ -24,4 +23,5 @@ impl EmailNotificationTaskType for FeedFishesV1 {
         }
     }
 }
+
 // -------------- Implement Functions -------------- //
