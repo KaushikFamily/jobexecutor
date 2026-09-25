@@ -3,7 +3,7 @@ use std::{println, sync::Arc};
 use axum::extract::State;
 use tokio::{net::TcpListener, sync::mpsc};
 
-use crate::{executor::{AppState, Event}, routes::create_routes};
+use crate::{executor::{AppState, Event, process_event}, routes::create_routes};
 
 pub mod executor;
 pub mod routes;
@@ -29,6 +29,7 @@ async fn main() {
     tokio::spawn(async move {
         while let Some(event) = rx.recv().await{
             println!("HELLO I'M RECIEVING THE EVENT");
+            let _ = process_event(event);
         }
     });
 
