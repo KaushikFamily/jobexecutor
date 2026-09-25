@@ -1,12 +1,11 @@
 use std::{collections::HashMap, iter::Map};
 use tokio::sync::mpsc;
 
-use serde::Deserialize;
+use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Deserialize)]
 pub struct Task {
     pub job_name: String,
-    pub task_id: String,
     pub metadata: TaskMetadata
 }
 
@@ -19,7 +18,8 @@ pub struct FeedFishesV1 {
 #[derive(Debug, Deserialize)]
 pub struct Event {
     pub event_type: String,
-    pub job_name: String
+    pub job_name: String,
+    pub job_id: String
 }
 
 #[derive(Debug)]
@@ -46,4 +46,9 @@ pub struct EmailData {
     pub body: String,
     pub subject: String,
     pub sender: String
+}
+
+#[derive(Debug, Deserialize, Serialize)]
+pub struct JobMetadataReqBody {
+
 }
