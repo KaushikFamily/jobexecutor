@@ -8,7 +8,6 @@ pub async fn process_event(
     event: Event
 ) -> Result<String, StatusCode>
 { 
-    println!("hello this is the job being executed: {}", event.job_name.clone());
     let res = match event.job_name.as_str() {
         "feed_fishes_v1" => {
             let metadata_resp = get_metadata(event.job_id.clone()).await;
@@ -28,12 +27,12 @@ pub async fn process_event(
             let feed_fishes_v1 = match metadata {
                 Some(data) => {
                     let task = Task {
-                        job_name : event.job_name.clone(),
+                        job_name : event.job_name,
                         metadata : data
                     };
 
                     Some(FeedFishesV1 {
-                        job_id: event.job_id.clone(),
+                        job_id: event.job_id,
                         task : task
                     })
                 }

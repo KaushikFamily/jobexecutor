@@ -18,11 +18,11 @@ async fn main() {
 
     let app = create_routes(State(state));
 
-    let listener = TcpListener::bind("127.0.0.1:3001")
+    let listener = TcpListener::bind("0.0.0.0:3001")
         .await
         .unwrap();
 
-    println!("SERVER IS RUNNING ON HTTP://127.0.0.1:3001");
+    println!("SERVER IS RUNNING ON HTTP://0.0.0.0:3001");
 
 
     // PROCESSOR THREAD

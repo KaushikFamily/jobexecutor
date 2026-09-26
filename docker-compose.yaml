@@ -1,0 +1,17 @@
+version: '3.8'
+
+services:
+  job-executor:
+    image: job-executor:latest
+    environment:
+      # Resolves via the shared network directly to the homeapi container
+      - TARGET_API_URL=http://homeapi-v1:8080
+    ports:
+      - "3001:3001"
+    networks:
+      - home-network
+
+networks:
+  home-network:
+    external: true
+    name: home-network
