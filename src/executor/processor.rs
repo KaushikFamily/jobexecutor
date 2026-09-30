@@ -10,7 +10,7 @@ pub async fn process_event(
 { 
     let res = match event.job_name.as_str() {
         "feed_fishes_v1" => {
-            let metadata_resp = get_metadata(event.job_id.clone()).await;
+            let metadata_resp = get_metadata(&event.job_id).await;
 
             let metadata = match metadata_resp {
                 Ok(data) =>
@@ -58,8 +58,47 @@ pub async fn process_event(
     Ok(res.to_string())
 }
 
+pub async fn process_event_v2(
+    event: Event
+) -> Result<String, StatusCode>
+{
+    let metadata_resp = get_metadata(&event.job_id).await;
+    
+    let metadata = match metadata_resp {
+        Ok(data) =>
+        {
+            data.1
+        }
+        Err(err) =>
+        {
+            println!("ERROR RETRIEVING METADATA: {}", err);
+            None
+        }
+    };
+
+    let task = match metadata {
+        Some(data) => {
+            Some(Task {
+                job_name: event.job_name,
+                metadata: data
+            })
+        }
+        None => None
+    };
+
+    let task_execute_resp = match task {
+        Some(task_data) => {
+            let resp = task_data.execute().await;
+            "EXECUTED TASK"
+        },
+        None => "TASK NOT FOUND",
+    };
+
+    Ok(task_execute_resp.to_string())
+}
+
 pub async fn get_metadata(
-    job_id: String
+    job_id: &str
 ) -> Result<(StatusCode, Option<TaskMetadata>), StatusCode> 
 {
     let client = Client::new();
