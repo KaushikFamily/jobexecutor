@@ -3,7 +3,7 @@ use std::{println, sync::Arc};
 use axum::extract::State;
 use tokio::{net::TcpListener, sync::mpsc};
 
-use crate::{executor::{AppState, Event, process_event}, routes::create_routes};
+use crate::{executor::{AppState, Event, process_event, process_event_v2}, routes::create_routes};
 
 pub mod executor;
 pub mod routes;
@@ -24,12 +24,15 @@ async fn main() {
 
     println!("SERVER IS RUNNING ON HTTP://0.0.0.0:3001");
 
-
     // PROCESSOR THREAD
     tokio::spawn(async move {
         while let Some(event) = rx.recv().await{
             println!("HELLO I'M RECIEVING THE EVENT");
-            let _ = process_event(event).await;
+            let resp = process_event_v2(event).await;
+            match resp {
+                Ok(data) => println!("{}", data),
+                Err(err) => println!("{}", err)
+            }
         }
     });
 
